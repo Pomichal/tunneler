@@ -68,16 +68,16 @@ void Scene::update(float time, int player_number) {
   }
 }
 
-void Scene::render() {
+void Scene::render(int player_number) {
   // Simply render all objects
   for ( auto& obj : objects )
-    obj->render(*this);
+    obj->render(*this,player_number);
   for ( auto& obj : missiles )
-    obj->render(*this);
+    obj->render(*this,player_number);
   for ( auto& obj : walls )
-    obj->render(*this);
+    obj->render(*this,player_number);
   for ( auto& obj : tanks )
-    obj->render(*this);
+    obj->render(*this,player_number);
 }
 
 std::vector<Object*> Scene::intersect(const glm::vec3 &position, const glm::vec3 &direction) {

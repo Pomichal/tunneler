@@ -42,7 +42,7 @@ public:
     /*!
      * Render all objects in the scene
      */
-    void render();
+    void render(int player_number);
 
     /*!
      * Pick objects using a ray

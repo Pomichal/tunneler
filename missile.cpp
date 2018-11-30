@@ -96,17 +96,17 @@ void Missile::explode(Scene &scene, vec3 explosionPosition, vec3 explosionScale)
   scene.objects.push_back(move(explosion));
 }
 
-void Missile::render(Scene &scene) {
+void Missile::render(Scene &scene, int player_number) {
   shader->use();
 
   // Set up light
   shader->setUniform("LightDirection", scene.lightDirection);
 
     // use cameras
-    for(int i=0; i<2;i++){
-        shader->setUniform("ProjectionMatrix", scene.cameras[i]->projectionMatrix);
-        shader->setUniform("ViewMatrix", scene.cameras[i]->viewMatrix);
-    }
+//    for(int i=0; i<2;i++){
+        shader->setUniform("ProjectionMatrix", scene.cameras[player_number]->projectionMatrix);
+        shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
+//    }
 
   // render mesh
   shader->setUniform("ModelMatrix", modelMatrix);

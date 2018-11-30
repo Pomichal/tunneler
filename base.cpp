@@ -43,7 +43,7 @@ bool Base::update(Scene &scene, float dt) {
     return true;
 }
 
-void Base::render(Scene &scene) {
+void Base::render(Scene &scene, int player_number) {
     // Generator will not be rendered
 }
 

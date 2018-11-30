@@ -54,7 +54,7 @@ private:
 
 
     // Create camera1
-    auto camera1 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f,0,0);
+    auto camera1 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f,SIZE + 10,0);
 
     int init_x = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
     int init_y = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
@@ -100,7 +100,7 @@ private:
       init_pos.y = GAME_SIZE - init_pos.y;
 
       // Create camera2
-      auto camera2 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f, SIZE + 10, 0);
+      auto camera2 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f, 0, 0);
 
       camera2->position.z = -30.0f;
       camera2->position.x = init_x;
@@ -278,11 +278,11 @@ public:
     // Update and render all objects
       glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
       scene.update(dt,0);
-    scene.render();
+    scene.render(0);
 
       glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);
       scene.update(dt,1);
-      scene.render();
+      scene.render(1);
   }
 };
 

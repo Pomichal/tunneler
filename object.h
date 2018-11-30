@@ -35,7 +35,7 @@ public:
    * Render the object in the scene
    * @param scene
    */
-  virtual void render(Scene &scene) = 0;
+  virtual void render(Scene &scene, int player_number) = 0;
 
 
   /*!

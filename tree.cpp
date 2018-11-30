@@ -42,17 +42,17 @@ bool Tree::update(Scene &scene, float dt) {
     return true;
 }
 
-void Tree::render(Scene &scene) {
+void Tree::render(Scene &scene, int player_number) {
     shader->use();
 
     // Set up light
     shader->setUniform("LightDirection", scene.lightDirection);
 
     // use cameras
-    for(int i=0; i<2;i++){
-        shader->setUniform("ProjectionMatrix", scene.cameras[i]->projectionMatrix);
-        shader->setUniform("ViewMatrix", scene.cameras[i]->viewMatrix);
-    }
+//    for(int i=0; i<2;i++){
+        shader->setUniform("ProjectionMatrix", scene.cameras[player_number]->projectionMatrix);
+        shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
+//    }
 
     // render mesh
     shader->setUniform("ModelMatrix", modelMatrix);

@@ -36,7 +36,7 @@ public:
    * Render projectile
    * @param scene Scene to render in
    */
-  void render(Scene &scene) override;
+  void render(Scene &scene, int player_number) override;
 
   /*!
    * Destroy the projectile

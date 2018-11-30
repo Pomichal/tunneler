@@ -26,17 +26,17 @@ Explosion::Explosion() {
   if (!mesh) mesh = make_unique<Mesh>("asteroid.obj");
 }
 
-void Explosion::render(Scene &scene) {
+void Explosion::render(Scene &scene, int player_number) {
   shader->use();
 
   // Transparency, interpolate from 1.0f -> 0.0f
   shader->setUniform("Transparency", 1.0f - age / maxAge);
 
     // use cameras
-    for(int i=0; i<2;i++){
-        shader->setUniform("ProjectionMatrix", scene.cameras[i]->projectionMatrix);
-        shader->setUniform("ViewMatrix", scene.cameras[i]->viewMatrix);
-    }
+//    for(int i=0; i<2;i++){
+        shader->setUniform("ProjectionMatrix", scene.cameras[player_number]->projectionMatrix);
+        shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
+//    }
 
   // render mesh
   shader->setUniform("ModelMatrix", modelMatrix);
