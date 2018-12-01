@@ -271,7 +271,7 @@ public:
     time = (float) glfwGetTime();
 
     // Set gray background
-    glClearColor(.5f, .5f, .5f, 0);
+    glClearColor(.3f, .3f, .3f, 0);
     // Clear depth and color buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
