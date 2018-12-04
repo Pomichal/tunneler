@@ -18,7 +18,7 @@ unique_ptr<Shader> Tree::shader;
 Tree::Tree() {
     // Set random scale speed and rotation
     hit = false;
-//    scale *=  .5f;
+    scale.z *=  5.f;
 //    rotation.x = -PI/2.f;
 //    speed = {linearRand(-2.0f, 2.0f), linearRand(-5.0f, -10.0f), 0.0f};
 //    rotation = ballRand(PI);

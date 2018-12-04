@@ -3,8 +3,8 @@
 #include "missile.h"
 #include "explosion.h"
 
-#include <shaders/diffuse_vert_glsl.h>
-#include <shaders/diffuse_frag_glsl.h>
+#include <shaders/color_vert_glsl.h>
+#include <shaders/color_frag_glsl.h>
 
 using namespace std;
 using namespace glm;
@@ -15,10 +15,11 @@ unique_ptr<Mesh> Life::mesh;
 unique_ptr<Texture> Life::texture;
 unique_ptr<Shader> Life::shader;
 
-Life::Life() {
+Life::Life(glm::vec3 c) {
     // Set random scale speed and rotation
-    scale.x *=  10;
-    scale.y *=  10;
+    scale.x *=  2;
+    scale.y *=  0.5f;
+    color = c;
 //    scale.z *=  f;
 //    rotation.x = -PI/2.f;
 //    speed = {linearRand(-2.0f, 2.0f), linearRand(-5.0f, -10.0f), 0.0f};
@@ -26,13 +27,12 @@ Life::Life() {
 //    rotMomentum = ballRand(PI);
 
     // Initialize static resources if needed
-    if (!shader) shader = make_unique<Shader>(diffuse_vert_glsl, diffuse_frag_glsl);
-    if (!texture) texture = make_unique<Texture>(image::loadBMP("lena.bmp"));
+    if (!shader) shader = make_unique<Shader>(color_vert_glsl, color_frag_glsl);
+//    if (!texture) texture = make_unique<Texture>(image::loadBMP("red.bmp"));
     if (!mesh) mesh = make_unique<Mesh>("cube.obj");
 }
 
 bool Life::update(Scene &scene, float dt) {
-//    std::cout << position.x << " " << position.y << " " << position.z << endl;
 
     // Generate modelMatrix from position, rotation and scale
     generateModelMatrix();
@@ -55,7 +55,8 @@ void Life::render(Scene &scene, int player_number) {
 //    }
 
     // render mesh
+    shader->setUniform("OverallColor", color);
     shader->setUniform("ModelMatrix", modelMatrix);
-    shader->setUniform("Texture", *texture);
+//    shader->setUniform("Texture", *texture);
     mesh->render();
 }

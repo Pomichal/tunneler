@@ -20,12 +20,14 @@ private:
     static std::unique_ptr<ppgso::Shader> shader;
     static std::unique_ptr<ppgso::Texture> texture;
 
+    glm::vec3 color;
+
 public:
 
     /*!
      * Create new asteroid
      */
-    Life();
+    Life(glm::vec3 c);
 
     /*!
      * Update asteroid

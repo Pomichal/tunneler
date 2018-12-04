@@ -66,6 +66,17 @@ void Scene::update(float time, int player_number) {
     !obj->update(*this, time);
       ++i;
   }
+
+    i = std::begin(trees);
+    while (i != std::end(trees)) {
+        // Update and remove from list if needed
+        auto obj = i->get();
+
+        if(!obj->update(*this, time)){
+            i = trees.erase(i);
+        } else
+        ++i;
+    }
 }
 
 void Scene::render(int player_number) {
@@ -78,6 +89,8 @@ void Scene::render(int player_number) {
     obj->render(*this,player_number);
   for ( auto& obj : tanks )
     obj->render(*this,player_number);
+    for ( auto& obj : trees )
+        obj->render(*this,player_number);
 }
 
 std::vector<Object*> Scene::intersect(const glm::vec3 &position, const glm::vec3 &direction) {

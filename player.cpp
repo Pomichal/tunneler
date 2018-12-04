@@ -35,8 +35,14 @@ Player::Player(int u, int d, int l, int r, int f) {
   right = r;
   fire = f;
 
+  damage = 0;
+
   rotation.z = PI/2.0f;
   rotation.y = -PI/2.0f;
+
+  auto li = make_unique<Life>(vec3{1,0,0});
+  li->position = position;
+  life = move(li);
 
   // Initialize static resources if needed
   if (!shader) shader = make_unique<Shader>(diffuse_vert_glsl, diffuse_frag_glsl);
@@ -139,6 +145,7 @@ bool Player::update(Scene &scene, float dt) {
   // Hit detection
   for ( auto& obj : scene.missiles ) {
 
+
     // We only need to collide with asteroids, ignore other objects
 
     if (distance(position, obj->position) < 3) {
@@ -148,10 +155,23 @@ bool Player::update(Scene &scene, float dt) {
       explosion->scale = scale * 3.0f;
       scene.objects.push_back(move(explosion));
 
+      auto missile = dynamic_cast<Missile*>(obj.get());
+
+      missile->destroy();
+
       // Die
-      return false;
+      damage++;
+//      cout << damage;
+      if(damage >= TANK_LIFE) {
+          return false;
+      }
     }
   }
+
+  life->position = position;
+  life->position.z -= 3;
+  life->scale.x = 2.0f * (TANK_LIFE - damage) / TANK_LIFE;
+  life->update(scene,dt);
 
   generateModelMatrix();
   return true;
@@ -174,6 +194,8 @@ void Player::render(Scene &scene, int player_number) {
   shader->setUniform("ModelMatrix", modelMatrix);
   shader->setUniform("Texture", *texture);
   mesh->render();
+
+  life->render(scene,player_number);
 }
 
 void Player::onClick(Scene &scene) {

@@ -17,6 +17,8 @@ const int BASE_Y = 15;
 const int TANK_LENGHT = 7;
 const int TANK_WIDTH = 4;
 
+const int TANK_LIFE = 5;
+
 const int SPEED = 10;
 
 

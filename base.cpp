@@ -27,15 +27,16 @@ bool Base::update(Scene &scene, float dt) {
     // Accumulate time
     time += dt;
 
-    for (auto &obj : scene.objects) {
+    for (auto &obj : scene.tanks) {
         // Ignore self in scene
-        if (obj.get() == this) continue;
+//        if (obj.get() == this) continue;
 
         // We only need to collide with asteroids and projectiles, ignore other objects
         auto tank = dynamic_cast<Player*>(obj.get()); //dynamic_pointer_cast<Projectile>(obj);
         if (!tank) continue;
 
-        if(in_base(tank->position)){
+        if(in_base(tank->position) && tank->damage > 0){
+            tank->damage -= 0.01f;
 //            cout << "in" << endl;
         }
     }

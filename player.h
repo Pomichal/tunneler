@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "scene.h"
+#include "life.h"
 
 /*!
  * Simple object representing the player
@@ -30,8 +31,14 @@ private:
   int left;
   int right;
   int fire;
+
+  std::unique_ptr<Life> life;
+
 public:
-  /*!
+
+    float damage;
+
+    /*!
    * Create a new player
    */
   Player(int u, int d, int l, int r, int f);
