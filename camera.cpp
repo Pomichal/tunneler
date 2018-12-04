@@ -25,25 +25,25 @@ void Camera::update(float time,float tank_position_x, float tank_position_y, int
 
     if(minus && position.z > -45.0f){
 //  if(minus){
-    position.z -= 0.005f;
+    position.z -= 0.05f;
   } else if (plus && position.z < -10.0f){
 //  } else if (plus){
-    position.z += 0.005f;
+    position.z += 0.05f;
   }
   if(rot_R){
-    back.x -= 0.0005f;
+    back.x -= 0.05f;
   }else if(rot_L){
-    back.x += 0.0005f;
+    back.x += 0.05f;
   }
   if(move_L){
-    position.x += 0.005f;
+    position.x += 0.05f;
   }else if(move_R){
-      position.x -= 0.005f;
+      position.x -= 0.05f;
   }
   if(move_U){
-      position.y += 0.005f;
+      position.y += 0.05f;
   }else if(move_D){
-      position.y -= 0.005f;
+      position.y -= 0.05f;
   }
     viewMatrix = lookAt(position, position - back, up);
 }

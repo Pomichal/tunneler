@@ -60,7 +60,12 @@ bool Player::update(Scene &scene, float dt) {
 //    cout << position.x << " " << position.y << endl;
   // Fire delay increment
   fireDelay += dt;
-
+  if(resistance_counter > 0){
+    resistance_counter -= dt;
+  } else {
+    resistance_counter = 0;
+    resistance = vec3{0,0,0};
+  }
   speed = vec3{0, 0, 0};
 
   // Keyboard controls
@@ -132,18 +137,26 @@ bool Player::update(Scene &scene, float dt) {
 //      cout << j << endl;
       if (direction.x > 0 && (scene.object_map[pos_x + j][pos_y + (int) direction.y + i] == 1)) {
         energy_level -= TREE_LOSE;
+        resistance = vec3{RESISTANCE,0,0};
+        resistance_counter = 2;
         scene.object_map[pos_x + j][pos_y + (int) direction.y + i] = 0;
       }
       if (direction.x < 0 && (scene.object_map[pos_x - j][pos_y + (int) direction.y + i] == 1)) {
         energy_level -= TREE_LOSE;
+        resistance = vec3{RESISTANCE,0,0};
+        resistance_counter = 2;
         scene.object_map[pos_x - j][pos_y + (int) direction.y + i] = 0;
       }
       if (direction.y > 0 && (scene.object_map[pos_x + (int) direction.x + i][pos_y + j] == 1)) {
         energy_level -= TREE_LOSE;
+        resistance = vec3{0,RESISTANCE,0};
+        resistance_counter = 2;
         scene.object_map[pos_x + (int) direction.x + i][pos_y + j] = 0;
       }
       if (direction.y < 0 && (scene.object_map[pos_x + (int) direction.x + i][pos_y - j] == 1)) {
         energy_level -= TREE_LOSE;
+        resistance = vec3{0,RESISTANCE,0};
+        resistance_counter = 2;
         scene.object_map[pos_x + (int) direction.x + i][pos_y - j] = 0;
       }
     }
@@ -164,7 +177,7 @@ bool Player::update(Scene &scene, float dt) {
       }
     }
   }
-  position += speed;
+  position += speed - speed * resistance;
 
 
 //  for (int i = GAME_SIZE - 1; i >= 0; i--) {

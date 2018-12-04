@@ -22,12 +22,15 @@ const int TANK_ENERGY = 100;
 const float MOVE_LOSE = 0.01f;
 const float TREE_LOSE = 0.3f;
 
+
+const float RESISTANCE = 0.5f;
+
 const int SPEED = 10;
 
 
 const unsigned int SIZE = 512;
 
-const int GAME_SIZE = 50;
+const int GAME_SIZE = 40;
 
 
 
@@ -90,3 +93,4 @@ public:
 };
 
 #endif // _PPGSO_SCENE_H
+
