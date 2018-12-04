@@ -18,14 +18,16 @@ const int TANK_LENGHT = 7;
 const int TANK_WIDTH = 4;
 
 const int TANK_LIFE = 5;
-const int TANK_ENERGY = 5000;
+const int TANK_ENERGY = 100;
+const float MOVE_LOSE = 0.01f;
+const float TREE_LOSE = 0.3f;
 
 const int SPEED = 10;
 
 
 const unsigned int SIZE = 512;
 
-const int GAME_SIZE = 100;
+const int GAME_SIZE = 50;
 
 
 

@@ -19,6 +19,7 @@ Life::Life(glm::vec3 c) {
     // Set random scale speed and rotation
     scale.x *=  2;
     scale.y *=  0.5f;
+    scale.z *=  0.5f;
     color = c;
 //    scale.z *=  f;
 //    rotation.x = -PI/2.f;

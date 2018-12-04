@@ -24,6 +24,8 @@ private:
   glm::vec3 direction{0.0f,TANK_LENGHT / 2,0.0f};
   glm::vec3 speed{0.0f,0.0f,0.0f};
 
+//  glm::vec3 resistance{0.0f,0.0f,0.0f};
+
 
   // controll
   int up;

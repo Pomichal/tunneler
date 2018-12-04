@@ -61,37 +61,35 @@ bool Player::update(Scene &scene, float dt) {
   // Fire delay increment
   fireDelay += dt;
 
-  speed = vec3{0,0,0};
+  speed = vec3{0, 0, 0};
 
   // Keyboard controls
-  if(scene.keyboard[left]) {
-    energy_level -= 1;
-//      cout << "LEFT" << endl;
+  if (scene.keyboard[left]) {
+    energy_level -= MOVE_LOSE;
     speed.x = SPEED * dt;
-    rotation.x = PI/2.f;
-    direction.x = TANK_LENGHT / 2 + 1;
+    rotation.x = PI / 2.f;
+    direction.x = TANK_LENGHT / 2;
     direction.y = 0;
-  } else if(scene.keyboard[right]) {
-//      cout << "RIGHT" << endl;
-    energy_level -= 1;
+  } else if (scene.keyboard[right]) {
+    energy_level -= MOVE_LOSE;
     speed.x = -SPEED * dt;
-    rotation.x = -PI/2.f;
-    direction.x = -TANK_LENGHT / 2 - 1;
+    rotation.x = -PI / 2.f;
+    direction.x = -TANK_LENGHT / 2;
     direction.y = 0;
-  } else if(scene.keyboard[up]) {
+  } else if (scene.keyboard[up]) {
 //      cout << scene.keyboard[up] << endl;
-    energy_level -= 1;
+    energy_level -= MOVE_LOSE;
     speed.y = SPEED * dt;
     rotation.x = 0;
     direction.x = 0;
-    direction.y = TANK_LENGHT / 2 + 1;
-  } else if(scene.keyboard[down]) {
+    direction.y = TANK_LENGHT / 2;
+  } else if (scene.keyboard[down]) {
 //      cout << "DOWN" << endl;
-    energy_level -= 1;
+    energy_level -= MOVE_LOSE;
     speed.y = -SPEED * dt;
     rotation.x = PI;
     direction.x = 0;
-    direction.y = -TANK_LENGHT / 2 - 1;
+    direction.y = -TANK_LENGHT / 2;
 //  } else {
 //    rotation.y = 0;
 //    rotation.z = 0;
@@ -99,74 +97,87 @@ bool Player::update(Scene &scene, float dt) {
 
 
   // Firing projectiles
-  if(scene.keyboard[fire] && fireDelay > fireRate) {
-    energy_level -= 5;
+  if (scene.keyboard[fire] && fireDelay > fireRate) {
+    energy_level -= 1.0f;
     // Reset fire delay
     fireDelay = 0;
-    // Invert file offset
-//    fireOffset = -fireOffset;
 
     auto missile = make_unique<Missile>(direction.x * SPEED, direction.y * SPEED);
-    missile->position = position + glm::vec3(direction.x, direction.y,-1.5f); // + fireOffset;
+    missile->position = position + glm::vec3(direction.x, direction.y, -1.5f); // + fireOffset;
     scene.missiles.push_back(move(missile));
   }
 
-  if (energy_level <= 0 ) {
+  if (energy_level <= 0) {
     // Explode
     auto explosion = make_unique<Explosion>();
     explosion->position = position;
     explosion->scale = scale * 3.0f;
     scene.objects.push_back(move(explosion));
 
-      return false;
+    return false;
   }
 
   vec3 new_position = position + speed;
   // collision detection
-  int pos_x = (int)round(new_position.x);
-  int pos_y = (int)round(new_position.y);
+  int pos_x = (int) round(new_position.x);
+  int pos_y = (int) round(new_position.y);
 //  cout << pos_x << " " << pos_y << endl;
 
 //    cout << "old " << speed.x << " " << speed.y << " " << speed.z << endl;
 
-  // tank vs wall
-  for(int i = -TANK_WIDTH / 2; i<= TANK_WIDTH / 2; i++) {
-    if (direction.y == 0 && (scene.object_map[pos_x + (int)direction.x][pos_y + (int)direction.y + i] == 2)) {
-//      position = old_pos;
-        speed = vec3{0,0,0};
-    }
-    if (direction.x == 0 && (scene.object_map[pos_x + (int)direction.x + i][pos_y + (int)direction.y] == 2)) {
-//      position = old_pos;
-        speed = vec3{0,0,0};
-    }
-  }
 
   // tank vs tree
-  for(int i = -TANK_WIDTH / 2; i<= TANK_WIDTH / 2; i++) {
-    if (direction.y == 0 && (scene.object_map[pos_x + (int)direction.x][pos_y + (int)direction.y + i] == 1)) {
-      scene.object_map[pos_x + (int)direction.x][pos_y + (int)direction.y + i] = 0;
-//      speed.x = -speed.x * 1.5f;
-//        if(i == TANK_WIDTH / 2)
-//        cout << "new " << speed.x << " " << speed.y << " " << speed.z << endl << endl;
-    }
-    if (direction.x == 0 && (scene.object_map[pos_x + (int)direction.x + i][pos_y + (int)direction.y] == 1)) {
-      scene.object_map[pos_x + (int)direction.x + i][pos_y + (int)direction.y] = 0;
-//      speed.y = -speed.y * 1.5f;
-//        if(i == TANK_WIDTH / 2)
-//            cout << "new " << speed.x << " " << speed.y << " " << speed.z << endl << endl;
-
+  for (int i = -TANK_WIDTH / 2; i <= TANK_WIDTH / 2; i++) {
+    for (int j = -1; j < abs(direction.x) + abs(direction.y) + 1; j++) {
+//      cout << j << endl;
+      if (direction.x > 0 && (scene.object_map[pos_x + j][pos_y + (int) direction.y + i] == 1)) {
+        energy_level -= TREE_LOSE;
+        scene.object_map[pos_x + j][pos_y + (int) direction.y + i] = 0;
+      }
+      if (direction.x < 0 && (scene.object_map[pos_x - j][pos_y + (int) direction.y + i] == 1)) {
+        energy_level -= TREE_LOSE;
+        scene.object_map[pos_x - j][pos_y + (int) direction.y + i] = 0;
+      }
+      if (direction.y > 0 && (scene.object_map[pos_x + (int) direction.x + i][pos_y + j] == 1)) {
+        energy_level -= TREE_LOSE;
+        scene.object_map[pos_x + (int) direction.x + i][pos_y + j] = 0;
+      }
+      if (direction.y < 0 && (scene.object_map[pos_x + (int) direction.x + i][pos_y - j] == 1)) {
+        energy_level -= TREE_LOSE;
+        scene.object_map[pos_x + (int) direction.x + i][pos_y - j] = 0;
+      }
     }
   }
 
 
-    position += speed;
+  // tank vs wall
+  for (int i = -TANK_WIDTH / 2; i <= TANK_WIDTH / 2; i++) {
+    for (int j = -1; j < abs(direction.x) + abs(direction.y); j++) {
+
+      if (direction.y == 0 && (scene.object_map[pos_x + (int) direction.x][pos_y + (int) direction.y + i] == 2)) {
+//      position = old_pos;
+        speed = vec3{0, 0, 0};
+      }
+      if (direction.x == 0 && (scene.object_map[pos_x + (int) direction.x + i][pos_y + (int) direction.y] == 2)) {
+//      position = old_pos;
+        speed = vec3{0, 0, 0};
+      }
+    }
+  }
+  position += speed;
+
+
+//  for (int i = GAME_SIZE - 1; i >= 0; i--) {
+//    for (int j = GAME_SIZE - 1; j >= 0; j--)
+//      cout << scene.object_map[j][i];
+//    cout << endl;
+//  }
+//  cout << endl;
 
 
   // Hit detection
   for ( auto& obj : scene.missiles ) {
 
-
-    // We only need to collide with asteroids, ignore other objects
 
     if (distance(position, obj->position) < 3) {
       // Explode
@@ -189,12 +200,10 @@ bool Player::update(Scene &scene, float dt) {
   }
 
   life->position = position + vec3{0,0,-3};
-//  life->position.z -= 3;
   life->scale.x = 2.0f * (TANK_LIFE - damage) / TANK_LIFE;
   life->update(scene,dt);
 
   energy->position = position + vec3{0,1,-3};
-//  life->position.z -= 3;
   energy->scale.x = 2.0f * energy_level / TANK_ENERGY;
   energy->update(scene,dt);
 

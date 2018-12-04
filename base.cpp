@@ -41,7 +41,7 @@ bool Base::update(Scene &scene, float dt) {
         }
 
         if(in_base(tank->position) && tank->energy_level < TANK_ENERGY) {
-            tank->energy_level += 1;
+            tank->energy_level += 0.1f;
         }
     }
 
