@@ -39,8 +39,13 @@ bool Base::update(Scene &scene, float dt) {
             tank->damage -= 0.01f;
 //            cout << "in" << endl;
         }
+
+        if(in_base(tank->position) && tank->energy_level < TANK_ENERGY) {
+            tank->energy_level += 1;
+        }
     }
-    // check tank and heal
+
+        // check tank and heal
     return true;
 }
 

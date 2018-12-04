@@ -29,11 +29,6 @@ void Scene::update(float time, int player_number) {
   }
   cameras[player_number]->update(time, new_pos_x, new_pos_y, keyboard[GLFW_KEY_1], keyboard[GLFW_KEY_2],keyboard[GLFW_KEY_I],keyboard[GLFW_KEY_O],
                   keyboard[GLFW_KEY_9],keyboard[GLFW_KEY_K],keyboard[GLFW_KEY_8],keyboard[GLFW_KEY_0]);
-//  camera2->update(time, new_pos_x, new_pos_y, keyboard[GLFW_KEY_1], keyboard[GLFW_KEY_2],keyboard[GLFW_KEY_I],keyboard[GLFW_KEY_O],
-//                  keyboard[GLFW_KEY_9],keyboard[GLFW_KEY_K],keyboard[GLFW_KEY_8],keyboard[GLFW_KEY_0]);
-//    camera1->update(time, new_pos_x, new_pos_y, keyboard[GLFW_KEY_1], keyboard[GLFW_KEY_2],keyboard[GLFW_KEY_I],keyboard[GLFW_KEY_O],
-//                   keyboard[GLFW_KEY_9],keyboard[GLFW_KEY_K],keyboard[GLFW_KEY_8],keyboard[GLFW_KEY_0]);
-
   auto i = std::begin(objects);
 
   while (i != std::end(objects)) {

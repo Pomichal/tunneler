@@ -69,14 +69,14 @@ bool Player::update(Scene &scene, float dt) {
 //      cout << "LEFT" << endl;
     speed.x = SPEED * dt;
     rotation.x = PI/2.f;
-    direction.x = TANK_LENGHT / 2;
+    direction.x = TANK_LENGHT / 2 + 1;
     direction.y = 0;
   } else if(scene.keyboard[right]) {
 //      cout << "RIGHT" << endl;
     energy_level -= 1;
     speed.x = -SPEED * dt;
     rotation.x = -PI/2.f;
-    direction.x = -TANK_LENGHT / 2;
+    direction.x = -TANK_LENGHT / 2 - 1;
     direction.y = 0;
   } else if(scene.keyboard[up]) {
 //      cout << scene.keyboard[up] << endl;
@@ -84,14 +84,14 @@ bool Player::update(Scene &scene, float dt) {
     speed.y = SPEED * dt;
     rotation.x = 0;
     direction.x = 0;
-    direction.y = TANK_LENGHT / 2;
+    direction.y = TANK_LENGHT / 2 + 1;
   } else if(scene.keyboard[down]) {
 //      cout << "DOWN" << endl;
     energy_level -= 1;
     speed.y = -SPEED * dt;
     rotation.x = PI;
     direction.x = 0;
-    direction.y = -TANK_LENGHT / 2;
+    direction.y = -TANK_LENGHT / 2 - 1;
 //  } else {
 //    rotation.y = 0;
 //    rotation.z = 0;
@@ -100,7 +100,7 @@ bool Player::update(Scene &scene, float dt) {
 
   // Firing projectiles
   if(scene.keyboard[fire] && fireDelay > fireRate) {
-    energy_level -= 2;
+    energy_level -= 5;
     // Reset fire delay
     fireDelay = 0;
     // Invert file offset
