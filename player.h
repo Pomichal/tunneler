@@ -33,10 +33,12 @@ private:
   int fire;
 
   std::unique_ptr<Life> life;
+  std::unique_ptr<Life> energy;
 
 public:
 
     float damage;
+    float energy_level;
 
     /*!
    * Create a new player

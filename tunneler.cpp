@@ -139,7 +139,7 @@ private:
             }
             else{
 //            else if(abs(i-init_x) < 15){
-              add_tree(vec3{i,j,0});
+//              add_tree(vec3{i,j,0});
             }
         }
 
