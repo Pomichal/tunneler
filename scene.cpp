@@ -58,7 +58,7 @@ void Scene::update(float time, int player_number) {
     // Update and remove from list if needed
     auto obj = i->get();
 
-    !obj->update(*this, time);
+    obj->update(*this, time);
       ++i;
   }
 
@@ -79,13 +79,44 @@ void Scene::render(int player_number) {
   for ( auto& obj : objects )
     obj->render(*this,player_number);
   for ( auto& obj : missiles )
-    obj->render(*this,player_number);
-  for ( auto& obj : walls )
+      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
+        obj->render(*this,player_number);
+    for ( auto& obj : walls )
+      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
     obj->render(*this,player_number);
   for ( auto& obj : tanks )
     obj->render(*this,player_number);
-    for ( auto& obj : trees )
-        obj->render(*this,player_number);
+  for ( auto& obj : trees ) {
+      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
+          obj->render(*this, player_number);
+  }
+}
+
+void Scene::updateMain(float time, int player_number) {
+
+    cameras[player_number]->update(time, cameras[player_number]->position.x, cameras[player_number]->position.y, keyboard[GLFW_KEY_1], keyboard[GLFW_KEY_2],keyboard[GLFW_KEY_I],keyboard[GLFW_KEY_O],
+                                   keyboard[GLFW_KEY_9],keyboard[GLFW_KEY_K],keyboard[GLFW_KEY_8],keyboard[GLFW_KEY_0]);
+
+    auto i = std::begin(menu_objects);
+
+
+  while (i != std::end(menu_objects)) {
+    // Update and remove from list if needed
+    auto obj = i->get();
+
+
+    if (!obj->update(*this, time))
+      i = menu_objects.erase(i); // NOTE: no need to call destructors as we store shared pointers in the scene
+    else
+      ++i;
+  }
+
+}
+
+void Scene::renderMain(int player_number) {
+
+  for ( auto& obj : menu_objects )
+    obj->render(*this,player_number);
 }
 
 std::vector<Object*> Scene::intersect(const glm::vec3 &position, const glm::vec3 &direction) {

@@ -30,7 +30,7 @@ const int SPEED = 10;
 
 const unsigned int SIZE = 512;
 
-const int GAME_SIZE = 40;
+const int GAME_SIZE = 50;
 
 
 
@@ -47,10 +47,14 @@ public:
      */
     void update(float time, int player_number);
 
+    void updateMain(float time, int player_number);
+
     /*!
      * Render all objects in the scene
      */
     void render(int player_number);
+
+    void renderMain(int player_number);
 
     /*!
      * Pick objects using a ray
@@ -73,9 +77,11 @@ public:
     std::vector< std::unique_ptr<Object> > tanks;
 
     std::list< std::unique_ptr<Object> > missiles;
-//    std::list< std::unique_ptr<Object> > tanks;
     std::list< std::unique_ptr<Object> > trees;
     std::list< std::unique_ptr<Object> > walls;
+
+
+    std::list< std::unique_ptr<Object> > menu_objects;
 
     std::array<std::array<int, GAME_SIZE>, GAME_SIZE> object_map = {0};
 

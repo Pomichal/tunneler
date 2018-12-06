@@ -19,7 +19,7 @@
 #include "tree.h"
 #include "base.h"
 #include "ground.h"
-//#include "space.h"
+#include "scoreCube.h"
 
 using namespace std;
 using namespace glm;
@@ -34,6 +34,7 @@ class SceneWindow : public Window {
 private:
   Scene scene;
   bool animate = true;
+  bool game = false;
 
 
   /*!
@@ -129,31 +130,53 @@ private:
       player2->position = init_pos;
       scene.tanks.push_back(move(player2));
 //
-    for(int i = 0; i < GAME_SIZE; i++)
-        for(int j = 0; j< GAME_SIZE;j++){
-            if(i==0 || i == GAME_SIZE - 1 || j == 0 || j == GAME_SIZE - 1){
-                add_wall(vec3{i,j,0});
-            }
-            else if(base1->in_base(vec3{i,j,0}) || base2->in_base(vec3{i,j,0})){
+//    int swap = -1;
+    for(int i = 0; i < GAME_SIZE; i++) {
+        for (int j = 0; j < GAME_SIZE; j++) {
+            if (i == 0 || i == GAME_SIZE - 1 || j == 0 || j == GAME_SIZE - 1) {
+                add_wall(vec3{i, j, 0});
+            } else if (base1->in_base(vec3{i, j, 0}) || base2->in_base(vec3{i, j, 0})) {
                 continue;
-            }
-            else{
+            } else {
 //            else if(abs(i-init_x) < 15){
-              add_tree(vec3{i,j,0});
+//                if (swap > 0) {
+                    add_tree(vec3{i, j, 0});
+//                }
             }
+//            swap = -swap;
         }
+//        swap = -swap;
+    }
 
       scene.objects.push_back(move(base1));
       scene.objects.push_back(move(base2));
 
-        for(int i = GAME_SIZE - 1; i >= 0;i--) {
-          for (int j = GAME_SIZE - 1; j >= 0; j--)
-             cout << scene.object_map[i][j];
-          cout << endl;
-        }
-        cout << endl;
+//        for(int i = GAME_SIZE - 1; i >= 0;i--) {
+//          for (int j = GAME_SIZE - 1; j >= 0; j--)
+//             cout << scene.object_map[i][j];
+//          cout << endl;
+//        }
+//        cout << endl;
+
+
+      auto score1 = make_unique<scoreCube>(1);
+      score1->position = vec3{-2.5f,-3.5f,-1};
+      auto score2 = make_unique<scoreCube>(1);
+      score2->position = vec3{2.5f, -3.5f ,-1};
+
+      auto scoreMain = make_unique<scoreCube>(2);
+      scoreMain->position = vec3{0,0 ,0};
+
+      scene.menu_objects.push_back(move(score1));
+      scene.menu_objects.push_back(move(score2));
+      scene.menu_objects.push_back(move(scoreMain));
 
   }
+
+//  void showMain(){
+//      scene.cameras[0]->position = vec3{0,0,-15};
+//      scene.cameras[1]->position = vec3{0,0,-15};
+//  }
 
 public:
   /*!
@@ -161,7 +184,7 @@ public:
    */
     SceneWindow() : Window{"tunneler", SIZE*2 + 10, SIZE} {
     //hideCursor();
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_FALSE);
 //    glfwSetScrollCallback(window, scroll_callback);
 
     // Initialize OpenGL state
@@ -174,9 +197,12 @@ public:
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
 
-//      glViewport(SIZE/2, SIZE/2, SIZE/2, SIZE/2);
-
+//    if(game)
       initScene();
+//    else{
+
+//    }
+//    showMain();
   }
 
   void add_tree(vec3 pos){
@@ -203,13 +229,19 @@ public:
     scene.keyboard[key] = action;
 
     // Reset
-    if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+    if (game && key == GLFW_KEY_R && action == GLFW_PRESS) {
       initScene();
     }
 
     // Pause
-    if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+    if (game && key == GLFW_KEY_P && action == GLFW_PRESS) {
       animate = !animate;
+    }
+
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
+          game = true;
+          scene.cameras[0]->position.z = -30;
+          scene.cameras[1]->position.z = -30;
     }
   }
 
@@ -218,10 +250,10 @@ public:
    * @param cursorX Mouse horizontal position in window coordinates
    * @param cursorY Mouse vertical position in window coordinates
    */
-  void onCursorPos(double cursorX, double cursorY) override {
-    scene.cursor.x = cursorX;
-    scene.cursor.y = cursorY;
-  }
+//  void onCursorPos(double cursorX, double cursorY) override {
+//    scene.cursor.x = cursorX;
+//    scene.cursor.y = cursorY;
+//  }
 
 
   /*!
@@ -230,33 +262,33 @@ public:
    * @param action Mouse bu
    * @param mods
    */
-  void onMouseButton(int button, int action, int mods) override {
-    if(button == GLFW_MOUSE_BUTTON_LEFT) {
-      scene.cursor.left = action == GLFW_PRESS;
-
-      if (scene.cursor.left) {
-        // Convert pixel coordinates to Screen coordinates
-        float u = (scene.cursor.x / width - 0.5f) * 2.0f;
-        float v = - (scene.cursor.y / height - 0.5f) * 2.0f;
-
-        // Get mouse pick vector in world coordinates
-        auto direction = scene.cameras[0]->cast(u, v);
-        auto position = scene.cameras[0]->position;
-
-        // Get all objects in scene intersected by ray
-        auto picked = scene.intersect(position, direction);
-
-        // Go through all objects that have been picked
-        for (auto &obj: picked) {
-          // Pass on the click event
-          obj->onClick(scene);
-        }
-      }
-    }
-    if(button == GLFW_MOUSE_BUTTON_RIGHT) {
-      scene.cursor.right = action == GLFW_PRESS;
-    }
-  }
+//  void onMouseButton(int button, int action, int mods) override {
+//    if(button == GLFW_MOUSE_BUTTON_LEFT) {
+//      scene.cursor.left = action == GLFW_PRESS;
+//
+//      if (scene.cursor.left) {
+//        // Convert pixel coordinates to Screen coordinates
+//        float u = (scene.cursor.x / width - 0.5f) * 2.0f;
+//        float v = - (scene.cursor.y / height - 0.5f) * 2.0f;
+//
+//        // Get mouse pick vector in world coordinates
+//        auto direction = scene.cameras[0]->cast(u, v);
+//        auto position = scene.cameras[0]->position;
+//
+//        // Get all objects in scene intersected by ray
+//        auto picked = scene.intersect(position, direction);
+//
+//        // Go through all objects that have been picked
+//        for (auto &obj: picked) {
+//          // Pass on the click event
+//          obj->onClick(scene);
+//        }
+//      }
+//    }
+//    if(button == GLFW_MOUSE_BUTTON_RIGHT) {
+//      scene.cursor.right = action == GLFW_PRESS;
+//    }
+//  }
 
   /*!
    * Window update implementation that will be called automatically from pollEvents
@@ -270,19 +302,37 @@ public:
 
     time = (float) glfwGetTime();
 
-    // Set gray background
-    glClearColor(.3f, .3f, .3f, 0);
-    // Clear depth and color buffers
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if(game) {
+        // Set gray background
+        glClearColor(.3f, .3f, .3f, 0);
+        // Clear depth and color buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Update and render all objects
-      glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
-      scene.update(dt,0);
-    scene.render(0);
 
-      glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);
-      scene.update(dt,1);
-      scene.render(1);
+        // Update and render all objects
+        glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
+        scene.update(dt, 0);
+        scene.render(0);
+
+        glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);
+        scene.update(dt, 1);
+        scene.render(1);
+    }
+    else{
+        glClearColor(.8f, .8f, .8f, 0);
+        // Clear depth and color buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        scene.cameras[0]->position = vec3{0,0,-15};
+        scene.cameras[1]->position = vec3{0,0,-15};
+
+        glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
+            scene.updateMain(dt, 0);
+            scene.renderMain(0);
+        glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);
+            scene.updateMain(dt, 1);
+            scene.renderMain(1);
+    }
+
   }
 };
 
@@ -295,6 +345,3 @@ int main() {
 
   return EXIT_SUCCESS;
 }
-
-
-// TODO viewport, 2 camera

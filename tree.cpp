@@ -18,8 +18,8 @@ unique_ptr<Shader> Tree::shader;
 Tree::Tree() {
     // Set random scale speed and rotation
     hit = false;
-    scale.z *=  5.f;
-//    rotation.x = -PI/2.f;
+//    scale.z *=  5.f;
+    rotation.x = -PI/2.f;
 //    speed = {linearRand(-2.0f, 2.0f), linearRand(-5.0f, -10.0f), 0.0f};
 //    rotation = ballRand(PI);
 //    rotMomentum = ballRand(PI);
@@ -27,7 +27,7 @@ Tree::Tree() {
     // Initialize static resources if needed
     if (!shader) shader = make_unique<Shader>(diffuse_vert_glsl, diffuse_frag_glsl);
     if (!texture) texture = make_unique<Texture>(image::loadBMP("tree.bmp"));
-    if (!mesh) mesh = make_unique<Mesh>("cube.obj");
+    if (!mesh) mesh = make_unique<Mesh>("tree.obj");
 }
 
 bool Tree::update(Scene &scene, float dt) {
