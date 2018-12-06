@@ -45,7 +45,7 @@ public:
      * Update all objects in the scene
      * @param time
      */
-    void update(float time, int player_number);
+    bool update(float time, int player_number);
 
     void updateMain(float time, int player_number);
 
@@ -80,8 +80,12 @@ public:
     std::list< std::unique_ptr<Object> > trees;
     std::list< std::unique_ptr<Object> > walls;
 
+//    int score1 = 0;
+//    int score2 = 0;
 
-    std::list< std::unique_ptr<Object> > menu_objects;
+
+    std::vector< std::unique_ptr<Object> > menu_objects;
+    std::vector<int> scores = {0,0};
 
     std::array<std::array<int, GAME_SIZE>, GAME_SIZE> object_map = {0};
 

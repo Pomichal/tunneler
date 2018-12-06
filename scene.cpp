@@ -5,7 +5,7 @@
 #include <shaders/diffuse_vert_glsl.h>
 #include <shaders/diffuse_frag_glsl.h>
 
-void Scene::update(float time, int player_number) {
+bool Scene::update(float time, int player_number) {
   // Use iterator to update all objects so we can remove while iterating
 //  camera->update(glm::vec3{0,0,0}, time);
   auto t = std::begin(tanks);
@@ -14,8 +14,12 @@ void Scene::update(float time, int player_number) {
     auto obj = t->get();
 
 
-    if (!obj->update(*this, time))
+    if (!obj->update(*this, time)) {
       t = tanks.erase(t); // NOTE: no need to call destructors as we store shared pointers in the scene
+      if(player_number == 1 && scores[0] < 6) scores[0]++;
+      if(player_number == 0 && scores[1] < 6) scores[1]++;
+      return false;
+    }
     else
       ++t;
   }
@@ -72,6 +76,9 @@ void Scene::update(float time, int player_number) {
         } else
         ++i;
     }
+
+  return true;
+
 }
 
 void Scene::render(int player_number) {
@@ -97,19 +104,44 @@ void Scene::updateMain(float time, int player_number) {
     cameras[player_number]->update(time, cameras[player_number]->position.x, cameras[player_number]->position.y, keyboard[GLFW_KEY_1], keyboard[GLFW_KEY_2],keyboard[GLFW_KEY_I],keyboard[GLFW_KEY_O],
                                    keyboard[GLFW_KEY_9],keyboard[GLFW_KEY_K],keyboard[GLFW_KEY_8],keyboard[GLFW_KEY_0]);
 
-    auto i = std::begin(menu_objects);
+//    auto i = std::begin(menu_objects);
 
+    for(int i = 0; i <3; i++){
+        menu_objects[i]->update(*this, time);
+        if(i == 0 || i == 1){
+          switch(scores[i]) {
+              case 1:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI,0,0};
+                break;
+              case 2:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI,0,-ppgso::PI/2.0f};
+                break;
+              case 3:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI,0,ppgso::PI};
+                break;
+              case 4:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI,0,ppgso::PI/2.0f};
+                break;
+              case 5:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI/2.0f,0,ppgso::PI};
+                break;
+              default:
+                menu_objects[i]->rotation = glm::vec3{ppgso::PI/2.0f,0,0};
+                  break;
+          }
+        }
+    }
 
-  while (i != std::end(menu_objects)) {
-    // Update and remove from list if needed
-    auto obj = i->get();
-
-
-    if (!obj->update(*this, time))
-      i = menu_objects.erase(i); // NOTE: no need to call destructors as we store shared pointers in the scene
-    else
-      ++i;
-  }
+//  while (i != std::end(menu_objects)) {
+//     Update and remove from list if needed
+//    auto obj = i->get();
+//
+//
+//    if (!obj->update(*this, time))
+//      i = menu_objects.erase(i); // NOTE: no need to call destructors as we store shared pointers in the scene
+//    else
+//      ++i;
+//  }
 
 }
 

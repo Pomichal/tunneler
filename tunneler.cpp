@@ -37,7 +37,10 @@ private:
   bool game = false;
 
 
-  /*!
+
+
+
+    /*!
    * Reset and initialize the game scene
    * Creating unique smart pointers to objects that are stored in the scene object list
    */
@@ -159,18 +162,6 @@ private:
 //        cout << endl;
 
 
-      auto score1 = make_unique<scoreCube>(1);
-      score1->position = vec3{-2.5f,-3.5f,-1};
-      auto score2 = make_unique<scoreCube>(1);
-      score2->position = vec3{2.5f, -3.5f ,-1};
-
-      auto scoreMain = make_unique<scoreCube>(2);
-      scoreMain->position = vec3{0,0 ,0};
-
-      scene.menu_objects.push_back(move(score1));
-      scene.menu_objects.push_back(move(score2));
-      scene.menu_objects.push_back(move(scoreMain));
-
   }
 
 //  void showMain(){
@@ -198,6 +189,18 @@ public:
     glCullFace(GL_BACK);
 
 //    if(game)
+      auto score1 = make_unique<scoreCube>(1);
+      score1->position = vec3{-2.5f,-3.5f,-1};
+      auto score2 = make_unique<scoreCube>(1);
+      score2->position = vec3{2.5f, -3.5f ,-1};
+
+      auto scoreMain = make_unique<scoreCube>(2);
+      scoreMain->position = vec3{0,0 ,0};
+
+      scene.menu_objects.push_back(move(score1));
+      scene.menu_objects.push_back(move(score2));
+      scene.menu_objects.push_back(move(scoreMain));
+
       initScene();
 //    else{
 
@@ -228,9 +231,17 @@ public:
   void onKey(int key, int scanCode, int action, int mods) override {
     scene.keyboard[key] = action;
 
-    // Reset
-    if (game && key == GLFW_KEY_R && action == GLFW_PRESS) {
+    // exit game
+    if (game && key == GLFW_KEY_M && action == GLFW_PRESS) {
       initScene();
+      game = false;
+    }
+
+    // reset score
+    if (!game && key == GLFW_KEY_R && action == GLFW_PRESS) {
+        scene.scores[0] = 0;
+        scene.scores[1] = 0;
+//        scene.score2 = 0;
     }
 
     // Pause
@@ -240,6 +251,7 @@ public:
 
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
           game = true;
+          initScene();
           scene.cameras[0]->position.z = -30;
           scene.cameras[1]->position.z = -30;
     }
@@ -311,11 +323,11 @@ public:
 
         // Update and render all objects
         glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
-        scene.update(dt, 0);
+        if(!scene.update(dt, 0)) game = false;
         scene.render(0);
 
         glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);
-        scene.update(dt, 1);
+        if(!scene.update(dt, 1)) game = false;
         scene.render(1);
     }
     else{
