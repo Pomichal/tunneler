@@ -89,12 +89,12 @@ void Scene::render(int player_number) {
       if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
         obj->render(*this,player_number);
     for ( auto& obj : walls )
-      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
+//      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
     obj->render(*this,player_number);
   for ( auto& obj : tanks )
     obj->render(*this,player_number);
   for ( auto& obj : trees ) {
-      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
+//      if(glm::distance(cameras[player_number]->position * glm::vec3{1,1,0}, obj->position) < 18)
           obj->render(*this, player_number);
   }
 }

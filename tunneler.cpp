@@ -51,23 +51,43 @@ private:
     scene.missiles.clear();
     scene.tanks.clear();
 
+
+        int init_x = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
+        int init_y = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
+//
+        vec3 init_pos = vec3{init_x,init_y,0};
+
+
       for(int i = GAME_SIZE - 1; i >= 0;i--) {
           for (int j = GAME_SIZE - 1; j >= 0; j--)
               scene.object_map[i][j] = 0;
       }
 
+        auto frame1 = make_unique<KeyFrame>();
+        frame1->t = 15.0f;
+        frame1->t_back = vec3{-1,-1,-1};
+        frame1->t_position = vec3{0,0,-20};
 
-    // Create camera1
+        auto frame2 = make_unique<KeyFrame>();
+        frame2->t = 15.0f;
+        frame2->t_back = vec3{0,0,-1};
+        frame2->t_position = vec3{init_pos.x,init_pos.y,-30};
+
+
+        // Create camera1
     auto camera1 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f,SIZE + 10,0);
 
-    int init_x = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
-    int init_y = linearRand(BASE_Y,GAME_SIZE - BASE_Y);
+
 //
-    vec3 init_pos = vec3{init_x,init_y,0};
-//
+
     camera1->position.z = -30.0f;
     camera1->position.x = init_x;
     camera1->position.y = init_y;
+
+    camera1->back = {0,0,-1};
+
+    camera1->frames.push_back(move(frame1));
+    camera1->frames.push_back(move(frame2));
     scene.cameras.push_back(move(camera1));
 
     auto obj = make_unique<Ground>(GAME_SIZE,GAME_SIZE);
@@ -103,13 +123,29 @@ private:
       init_pos.x = GAME_SIZE - init_pos.x;
       init_pos.y = GAME_SIZE - init_pos.y;
 
+        auto frame3 = make_unique<KeyFrame>();
+        frame3->t = 5.0f;
+        frame3->t_back = vec3{1,1,-1};
+        frame3->t_position = vec3{GAME_SIZE,GAME_SIZE,-20};
+
+        auto frame4 = make_unique<KeyFrame>();
+        frame4->t = 5.0f;
+        frame4->t_back = vec3{0,0,-1};
+        frame4->t_position = vec3{init_pos.x,init_pos.y,-30};
+
       // Create camera2
       auto camera2 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f, 0, 0);
 
       camera2->position.z = -30.0f;
       camera2->position.x = init_x;
       camera2->position.y = init_y;
-      scene.cameras.push_back(move(camera2));
+
+        camera2->back = {0,0,-1};
+
+        camera2->frames.push_back(move(frame3));
+        camera2->frames.push_back(move(frame4));
+
+        scene.cameras.push_back(move(camera2));
 
       // create base2
       auto base2 = make_unique<Base>();
@@ -143,7 +179,7 @@ private:
             } else {
 //            else if(abs(i-init_x) < 15){
 //                if (swap > 0) {
-                    add_tree(vec3{i, j, 0});
+//                    add_tree(vec3{i, j, 0});
 //                }
             }
 //            swap = -swap;
@@ -183,6 +219,11 @@ public:
       glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
+
+    glEnable(GL_LIGHTING);
+//      glEnable(GL_BLEND);
+//      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // Enable polygon culling
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
@@ -200,6 +241,7 @@ public:
       scene.menu_objects.push_back(move(score1));
       scene.menu_objects.push_back(move(score2));
       scene.menu_objects.push_back(move(scoreMain));
+
 
       initScene();
 //    else{
@@ -249,12 +291,35 @@ public:
       animate = !animate;
     }
 
+    if (game && key == GLFW_KEY_Z && action == GLFW_PRESS) {
+          scene.cameras[0]->frame_num = 0;
+          scene.cameras[1]->frame_num = 0;
+        scene.cameras[0]->frames[0]->s_position = scene.cameras[0]->position;
+        scene.cameras[0]->frames[0]->s_back = scene.cameras[0]->back;
+        scene.cameras[0]->time_counter = scene.cameras[0]->frames[0]->t;
+        scene.cameras[1]->frames[0]->s_position = scene.cameras[1]->position;
+        scene.cameras[1]->frames[0]->s_back = scene.cameras[1]->back;
+        scene.cameras[1]->time_counter = scene.cameras[1]->frames[0]->t;
+
+//        cout << scene.cameras[0]->position.x << " " << scene.cameras[0]->position.y << " " << endl;
+//        cout << scene.cameras[0]->frames[0]->s_position.x << " " << scene.cameras[0]->frames[0]->s_position.y << " " << endl;
+//        cout << scene.cameras[1]->position.x << " " << scene.cameras[1]->position.y << " " << endl;
+//        cout << endl;
+    }
+
     if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
           game = true;
           initScene();
           scene.cameras[0]->position.z = -30;
           scene.cameras[1]->position.z = -30;
     }
+
+      if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+          scene.lightDirection.x -= 1;
+      }
+      if (key == GLFW_KEY_B && action == GLFW_PRESS) {
+          scene.lightDirection.x += 1;
+      }
   }
 
   /*!

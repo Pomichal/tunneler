@@ -19,6 +19,13 @@ private:
     static std::unique_ptr<ppgso::Shader> shader;
     static std::unique_ptr<ppgso::Texture> texture;
 
+    std::map<std::string, int> material_map;
+    std::vector<tinyobj::material_t> material;
+
+    glm::vec3 ambient{0.2f,0.2f,0.2f};
+    glm::vec4 diffuse{0.8f,0.8f,0.8f,1.0f};
+    glm::vec3 specular{0.2f,0.2f,0.2f};
+    float shininess = 0.1f;
     // Age of the object in seconds
     bool hit;
 

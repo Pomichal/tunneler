@@ -7,6 +7,14 @@
 
 //#include "scene.h"
 
+struct KeyFrame{
+    glm::vec3 s_position;
+    glm::vec3 t_position;
+    glm::vec3 s_back;
+    glm::vec3 t_back;
+    float t;
+};
+
 /*!
  * Simple camera object that keeps track of viewMatrix and projectionMatrix
  * the projectionMatrix is by default constructed as perspective projection
@@ -20,6 +28,11 @@ public:
 
     glm::mat4 viewMatrix;
     glm::mat4 projectionMatrix;
+
+    std::vector< std::shared_ptr<KeyFrame> > frames;
+
+    int frame_num = -1;
+    float time_counter = 0;
 
     int viewport_x;
     int viewport_y;

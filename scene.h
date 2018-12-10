@@ -33,7 +33,6 @@ const unsigned int SIZE = 512;
 const int GAME_SIZE = 50;
 
 
-
 /*
  * Scene is an object that will aggregate all scene related data
  * Objects are stored in a list of objects
@@ -93,7 +92,19 @@ public:
     std::map< int, int > keyboard;
 
     // Lights, in this case using only simple directional diffuse lighting
-    glm::vec3 lightDirection{-1.0f, -1.0f, -1.0f};
+    glm::vec3 lightDirection{0.0f, 0.0f, -1.0f};
+    glm::vec3 lightColor{1.0f, 1.0f, 1.0f};
+
+    glm::vec3 lightDirection2{0.0f, 0.0f, -1.0f};
+    glm::vec3 lightColor2{0.0f, 0.0f, 1.0f};
+
+    glm::vec3 AmbientLightColor{0.1f, 0.1f, 0.1f};
+
+
+
+
+    std::vector<glm::vec3> LightsDirections;
+
 
     // Store cursor state
     struct {
