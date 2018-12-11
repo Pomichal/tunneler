@@ -8,20 +8,14 @@
 bool Scene::update(float time, int player_number) {
   // Use iterator to update all objects so we can remove while iterating
 //  camera->update(glm::vec3{0,0,0}, time);
-  auto t = std::begin(tanks);
-  while (t != std::end(tanks)) {
-    // Update and remove from list if needed
-    auto obj = t->get();
 
-
-    if (!obj->update(*this, time)) {
-      t = tanks.erase(t); // NOTE: no need to call destructors as we store shared pointers in the scene
-      if(player_number == 1 && scores[0] < 6) scores[0]++;
-      if(player_number == 0 && scores[1] < 6) scores[1]++;
-      return false;
-    }
-    else
-      ++t;
+    for(int i = 0; i<2; i++){
+      if (!tanks[i]->update(*this, time)) {
+          if(i == 1 && scores[0] < 6) scores[0]++;
+          if(i == 0 && scores[1] < 6) scores[1]++;
+//          t = tanks.erase(t); // NOTE: no need to call destructors as we store shared pointers in the scene
+          return false;
+      }
   }
 
   float new_pos_x = cameras[player_number]->position.x;

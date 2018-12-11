@@ -284,6 +284,8 @@ void Player::render(Scene &scene, int player_number) {
   shader->setUniform("MaterialDiffuse", diffuse);
   shader->setUniform("MaterialSpecular", specular);
   shader->setUniform("MaterialShininess", shininess);
+//    shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
+
 //
 
 

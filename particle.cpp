@@ -46,7 +46,7 @@ Particle::Particle(glm::vec3 p, glm::vec3 s, glm::vec3 c, float sc, float b) {
 bool Particle::update(Scene &scene, float dt) {
 
     modelMatrix = mat4(1);
-    position -= speed * 0.9f * dt;
+    position -= speed * dt;
 //      cout << position.y << endl;
     if(position.z > 0.5f && speed.z < 0 && GAME_SIZE > position.x  && position.x > 0 && GAME_SIZE > position.y
     && position.y > 0){
@@ -126,6 +126,8 @@ void Particle::render(Scene &scene, int player_number) {
 
     // render mesh
     shader->setUniform("ModelMatrix", modelMatrix);
+    shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
+
 //    shader->setUniform("Texture", *texture);
     shader->setUniform("OverallColor", color);
 

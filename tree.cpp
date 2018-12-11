@@ -85,6 +85,7 @@ void Tree::render(Scene &scene, int player_number) {
 
     // render mesh
     shader->setUniform("ModelMatrix", modelMatrix);
+    shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
     shader->setUniform("Texture", *texture);
     mesh->render();
 }

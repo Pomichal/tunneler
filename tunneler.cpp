@@ -173,7 +173,8 @@ private:
 //
 
     int type = linearRand(0,1);
-    cout << type << endl;
+    scene.lightDirection = {type, type, -1};
+//    cout << type << endl;
     int swap = -1;
     for(int i = 0; i < GAME_SIZE; i++) {
         for (int j = 0; j < GAME_SIZE; j++) {
@@ -187,9 +188,9 @@ private:
                     add_tree(vec3{i, j, 0}, 0);
                 }
             }
-            swap = linearRand(-2,1);
+            swap = linearRand(-3,1);
         }
-        swap = linearRand(-2,1);
+        swap = linearRand(-3,1);
     }
 
       scene.objects.push_back(move(base1));
@@ -393,7 +394,10 @@ public:
 
         // Update and render all objects
         glViewport(scene.cameras[0]->viewport_x, scene.cameras[0]->viewport_y, SIZE, SIZE);
-        if(!scene.update(dt, 0)) game = false;
+        if(!scene.update(dt, 0)) {
+            game = false;
+            return;
+        }
         scene.render(0);
 
         glViewport(scene.cameras[1]->viewport_x, scene.cameras[1]->viewport_y, SIZE, SIZE);

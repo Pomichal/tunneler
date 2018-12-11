@@ -146,6 +146,8 @@ void Missile::render(Scene &scene, int player_number) {
 //    }
 
   // render mesh
+  shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
+
   shader->setUniform("ModelMatrix", modelMatrix);
   shader->setUniform("Texture", *texture);
   mesh->render();

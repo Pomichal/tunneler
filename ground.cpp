@@ -74,7 +74,9 @@ void Ground::render(Scene &scene, int player_number) {
     // use cameras
 //    for(int i=0; i<2;i++){
         shader->setUniform("ProjectionMatrix", scene.cameras[player_number]->projectionMatrix);
-        shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
+//    shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
+
+    shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
 //    }
 
     // render mesh
