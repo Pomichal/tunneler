@@ -64,14 +64,15 @@ private:
       }
 
         auto frame1 = make_unique<KeyFrame>();
-        frame1->t = 15.0f;
+        frame1->t = 5.0f;
         frame1->t_back = vec3{-1,-1,-1};
         frame1->t_position = vec3{0,0,-20};
 
         auto frame2 = make_unique<KeyFrame>();
-        frame2->t = 15.0f;
+        frame2->t = 5.0f;
         frame2->t_back = vec3{0,0,-1};
-        frame2->t_position = vec3{init_pos.x,init_pos.y,-30};
+        frame2->s_back = vec3{-1,-1,-1};
+        frame2->s_position = vec3{0,0,-20};
 
 
         // Create camera1
@@ -130,8 +131,9 @@ private:
 
         auto frame4 = make_unique<KeyFrame>();
         frame4->t = 5.0f;
+        frame4->s_back = vec3{1,1,-1};
         frame4->t_back = vec3{0,0,-1};
-        frame4->t_position = vec3{init_pos.x,init_pos.y,-30};
+        frame4->s_position = vec3{GAME_SIZE,GAME_SIZE,-20};
 
       // Create camera2
       auto camera2 = make_unique<Camera>(60.0f, 1.0f, 0.1f, 100.0f, 0, 0);
@@ -169,7 +171,10 @@ private:
       player2->position = init_pos;
       scene.tanks.push_back(move(player2));
 //
-//    int swap = -1;
+
+    int type = linearRand(0,1);
+    cout << type << endl;
+    int swap = -1;
     for(int i = 0; i < GAME_SIZE; i++) {
         for (int j = 0; j < GAME_SIZE; j++) {
             if (i == 0 || i == GAME_SIZE - 1 || j == 0 || j == GAME_SIZE - 1) {
@@ -178,13 +183,13 @@ private:
                 continue;
             } else {
 //            else if(abs(i-init_x) < 15){
-//                if (swap > 0) {
-//                    add_tree(vec3{i, j, 0});
-//                }
+                if (swap > 0) {
+                    add_tree(vec3{i, j, 0}, 0);
+                }
             }
-//            swap = -swap;
+            swap = linearRand(-2,1);
         }
-//        swap = -swap;
+        swap = linearRand(-2,1);
     }
 
       scene.objects.push_back(move(base1));
@@ -250,8 +255,8 @@ public:
 //    showMain();
   }
 
-  void add_tree(vec3 pos){
-      auto obj = make_unique<Tree>();
+  void add_tree(vec3 pos, int type){
+      auto obj = make_unique<Tree>(type);
       obj->position = pos;
       scene.object_map[(int)pos.x][(int)pos.y] = 1;
       scene.trees.push_back(move(obj));

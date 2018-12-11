@@ -63,8 +63,7 @@ void Camera::update(float time,float tank_position_x, float tank_position_y, int
 
         if(time > time_counter && frame_num == 0) {
             frame_num = 1;
-            frames[1]->s_position = position;
-            frames[1]->s_back = back;
+            frames[1]->t_position = frames[0]->s_position;
             time_counter = frames[1]->t;
         }else if( time > time_counter) {
             frame_num = -1;

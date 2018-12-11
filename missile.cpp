@@ -4,6 +4,7 @@
 #include "tree.h"
 #include "wall.h"
 #include "explosion.h"
+#include "particle.h"
 
 #include <shaders/diffuse_vert_glsl.h>
 #include <shaders/tunneler_frag_glsl.h>
@@ -97,6 +98,15 @@ bool Missile::update(Scene &scene, float dt) {
 
 void Missile::explode(Scene &scene, vec3 explosionPosition, vec3 explosionScale) {
   // Generate explosion
+  for(int i = 0; i < 10; i++) {
+//              float random_size = linearRand(0.1f, 0.3f);
+    float random_x = linearRand(-5.0f, 5.0f);
+    float random_y = linearRand(-5.0f, 5.0f);
+    float random_z = linearRand(-3.0f, 3.0f);
+    auto particle = make_unique<Particle>(position, vec3{random_x, random_y, random_z},
+                                          vec3{0.1f, 0.1f, 0.1f}, 0.5f, -101.0f);
+    scene.objects.push_back(move(particle));
+  }
   auto explosion = make_unique<Explosion>();
   explosion->position = explosionPosition;
   explosion->scale = explosionScale;

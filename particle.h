@@ -12,7 +12,7 @@
  * It initializes and loads all resources only once
  * It will move down along the Y axis and self delete when reaching below -10
  */
-class Tree final : public Object {
+class Particle final : public Object {
 private:
     // Static resources (Shared between instances)
     static std::unique_ptr<ppgso::Mesh> mesh;
@@ -26,19 +26,35 @@ private:
     glm::vec4 diffuse{0.8f,0.8f,0.8f,1.0f};
     glm::vec3 specular{0.2f,0.2f,0.2f};
     float shininess = 0.1f;
+
+    glm::mat4 modelMatrix;
+    glm::vec3 position;
+    float scale;
+    glm::vec3 speed;
+    glm::vec3 color;
+    float bumm;
+
     // Age of the object in seconds
-    bool hit;
+//    float age{0.0f};
 
     // Speed and rotational momentum
 //    glm::vec3 speed;
 //    glm::vec3 rotMomentum;
 
+    /*!
+     * Split the asteroid into multiple pieces and spawn an explosion object.
+     *
+     * @param scene - Scene to place pieces and explosion into
+     * @param explosionPosition - Initial position of the explosion
+     * @param explosionScale - Scale of the explosion
+     * @param pieces - Asteroid pieces to generate
+     */
 
 public:
     /*!
      * Create new asteroid
      */
-    Tree(int type);
+    Particle(glm::vec3 p, glm::vec3 s, glm::vec3 c, float sc, float b);
 
     /*!
      * Update asteroid
@@ -58,8 +74,6 @@ public:
      * Custom click event for asteroid
      */
     void onClick(Scene &scene) override;
-
-    void destroy();
 
 private:
 };

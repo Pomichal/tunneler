@@ -6,6 +6,8 @@
 #include "tree.h"
 #include "wall.h"
 
+#include <math.h>
+
 
 #include <shaders/diffuse_vert_glsl.h>
 #include <shaders/tunneler_frag_glsl.h>
@@ -185,16 +187,43 @@ bool Player::update(Scene &scene, float dt) {
       }
     }
   }
+
+  // tank vs tank
+  for ( auto& obj : scene.tanks ) {
+    if (obj.get() == this) continue;
+
+    auto enemy = dynamic_cast<Player*>(obj.get());
+
+//    cout << direction.y << " " << enemy->direction.y << endl;
+//    cout << distance(position, enemy->position) << endl << endl;
+
+    if(direction.x > 0) {
+      if (enemy->direction.y == 0 && abs(position.y - enemy->position.y) < 3 && 0 < enemy->position.x - position.x
+          && enemy->position.x - position.x < 7.0f) {
+        speed = vec3{0, 0, 0};
+      } else if (enemy->direction.y != 0 && abs(position.y - enemy->position.y) < 5 &&
+                 0 < enemy->position.x - position.x
+                 && enemy->position.x - position.x < 5.5f) {
+        speed = vec3{0, 0, 0};
+      }
+    }
+    if(direction.x < 0 && enemy->direction.y==0 && abs(position.y - enemy->position.y) < 3 &&  0 < position.x - enemy->position.x
+    && position.x - enemy->position.x < 7.0f){
+      speed = vec3{0, 0, 0};
+    }
+    if(enemy->direction.x==0 && direction.y > 0 && abs(position.x - enemy->position.x) < 3 && 0 < enemy->position.y - position.y
+       && enemy->position.y - position.y < 7.0f){
+      speed = vec3{0, 0, 0};
+    }
+    if(enemy->direction.x==0 && direction.y < 0 && abs(position.x - enemy->position.x) < 3 && 0 < position.y - enemy->position.y
+       && position.y - enemy->position.y < 7.0f){
+//      cout << "HOOPPeeeeeeeee" << endl;
+      speed = vec3{0, 0, 0};
+    }
+
+  }
+
   position += speed - speed * resistance;
-
-
-//  for (int i = GAME_SIZE - 1; i >= 0; i--) {
-//    for (int j = GAME_SIZE - 1; j >= 0; j--)
-//      cout << scene.object_map[j][i];
-//    cout << endl;
-//  }
-//  cout << endl;
-
 
   // Hit detection
   for ( auto& obj : scene.missiles ) {

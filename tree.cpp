@@ -15,7 +15,7 @@ unique_ptr<Mesh> Tree::mesh;
 unique_ptr<Texture> Tree::texture;
 unique_ptr<Shader> Tree::shader;
 
-Tree::Tree() {
+Tree::Tree(int type) {
     // Set random scale speed and rotation
     hit = false;
 //    scale.z *=  5.f;
@@ -26,8 +26,12 @@ Tree::Tree() {
 
     // Initialize static resources if needed
     if (!shader) shader = make_unique<Shader>(diffuse_vert_glsl, tunneler_frag_glsl);
-    if (!texture) texture = make_unique<Texture>(image::loadBMP("tree.bmp"));
     if (!mesh) mesh = make_unique<Mesh>("tree.obj");
+    if(type == 0) {
+        if (!texture) texture = make_unique<Texture>(image::loadBMP("tree2.bmp"));
+    } else {
+        if (!texture) texture = make_unique<Texture>(image::loadBMP("tree.bmp"));
+    }
 
     ifstream mtl("my_material.mtl", std::ifstream::binary);
     tinyobj::LoadMtl(this->material_map, this->material, mtl);
