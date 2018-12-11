@@ -49,14 +49,13 @@ void Ground::render(Scene &scene, int player_number) {
 
     // Set up light
     shader->use();
+//    // Set up light
 
     shader->setUniform("MaterialAmbient", {ambient.x, ambient.y, ambient.z});
     shader->setUniform("MaterialDiffuse", {diffuse.x, diffuse.y, diffuse.z, 1.0f});
     shader->setUniform("MaterialSpecular", {specular.x, specular.y, specular.z});
     shader->setUniform("MaterialShininess", shininess);
-//        shader->setUniform("numLights", 2);
 
-//    // Set up light
     shader->setUniform("LightDirection", scene.lightDirection);
     shader->setUniform("LightColor", scene.lightColor);
 
@@ -69,15 +68,10 @@ void Ground::render(Scene &scene, int player_number) {
     shader->setUniform("MaterialDiffuse", diffuse);
     shader->setUniform("MaterialSpecular", specular);
     shader->setUniform("MaterialShininess", shininess);
-//    shader->setUniform("LightDirection2", scene.lightDirection);
-//    shader->setUniform("LightColor2", vec3{0,0,1});
-    // use cameras
-//    for(int i=0; i<2;i++){
         shader->setUniform("ProjectionMatrix", scene.cameras[player_number]->projectionMatrix);
 //    shader->setUniform("CameraPosition", scene.cameras[player_number]->position);
 
     shader->setUniform("ViewMatrix", scene.cameras[player_number]->viewMatrix);
-//    }
 
     // render mesh
     shader->setUniform("ModelMatrix", modelMatrix);

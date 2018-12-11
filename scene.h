@@ -30,7 +30,7 @@ const int SPEED = 10;
 
 const unsigned int SIZE = 512;
 
-const int GAME_SIZE = 50;
+const int GAME_SIZE = 60;
 
 
 /*

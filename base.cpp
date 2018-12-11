@@ -13,11 +13,6 @@ using namespace ppgso;
 Base::Base(){
 };
 
-void Base::add_wall(Scene &scene, vec3 pos) {
-    auto obj = make_unique<Wall>();
-    obj->position = pos;
-    scene.objects.push_back(move(obj));
-}
 
 bool Base::in_base(vec3 pos) {
     return (abs(pos.x - position.x) <= (BASE_X / 2.0f) +2) && (abs(pos.y - position.y) <= (BASE_Y / 2.0f));
@@ -28,16 +23,12 @@ bool Base::update(Scene &scene, float dt) {
     time += dt;
 
     for (auto &obj : scene.tanks) {
-        // Ignore self in scene
-//        if (obj.get() == this) continue;
 
-        // We only need to collide with asteroids and projectiles, ignore other objects
         auto tank = dynamic_cast<Player*>(obj.get()); //dynamic_pointer_cast<Projectile>(obj);
         if (!tank) continue;
 
         if(in_base(tank->position) && tank->damage > 0){
             tank->damage -= 0.01f;
-//            cout << "in" << endl;
         }
 
         if(in_base(tank->position) && tank->energy_level < TANK_ENERGY) {
@@ -45,11 +36,10 @@ bool Base::update(Scene &scene, float dt) {
         }
     }
 
-        // check tank and heal
     return true;
 }
 
 void Base::render(Scene &scene, int player_number) {
-    // Generator will not be rendered
+    // Base will not be rendered
 }
 

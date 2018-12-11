@@ -5,6 +5,7 @@
 
 #include <shaders/diffuse_vert_glsl.h>
 #include <shaders/tunneler_frag_glsl.h>
+#include <shaders/tunneler_vert_glsl.h>
 
 using namespace std;
 using namespace glm;
@@ -25,7 +26,7 @@ Tree::Tree(int type) {
 //    rotMomentum = ballRand(PI);
 
     // Initialize static resources if needed
-    if (!shader) shader = make_unique<Shader>(diffuse_vert_glsl, tunneler_frag_glsl);
+    if (!shader) shader = make_unique<Shader>(tunneler_vert_glsl, tunneler_frag_glsl);
     if (!mesh) mesh = make_unique<Mesh>("tree.obj");
     if(type == 0) {
         if (!texture) texture = make_unique<Texture>(image::loadBMP("tree2.bmp"));

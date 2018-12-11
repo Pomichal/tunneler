@@ -118,7 +118,7 @@ bool Player::update(Scene &scene, float dt) {
     fireDelay = 0;
 
     auto missile = make_unique<Missile>(direction.x * SPEED, direction.y * SPEED);
-    missile->position = position + glm::vec3(direction.x, direction.y, -1.5f); // + fireOffset;
+    missile->position = position + glm::vec3(direction.x, direction.y, -2.5f); // + fireOffset;
     scene.missiles.push_back(move(missile));
   }
 

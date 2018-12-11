@@ -15,7 +15,7 @@ using namespace std;
 using namespace glm;
 using namespace ppgso;
 
-const vec3 GRAV = {0.0f,0.0f, -2.0f};
+const vec3 GRAV = {0.0f,0.0f, -5.0f};
 
 // Static resources
 unique_ptr<Mesh> Particle::mesh;
@@ -74,22 +74,10 @@ bool Particle::update(Scene &scene, float dt) {
         }
         return false;
     }
-    if(bumm < -102.f){
+    if(bumm < -105.f){
         return false;
     }
-//      if(naObrazovke.y < -0.2 && !broken){
-//        float random1  = (float)(rand() % 1000)/(float)1000000;
-//        float random2  = (float)(rand() % 1000)/(float)1000000;
-//        scene.emplace_back(new Particle(vec3{0, -0.4, -10}, vec3{random1, random2, 0}, vec3{0, 1, 0}, 0.3f,true));
-//        random1  = (float)(rand() % 1000)/(float)1000000+0.0005;
-//        random2  = (float)(rand() % 1000)/(float)1000000+0.0005;
-//        scene.emplace_back(new Particle(vec3{0, -0.4, -10}, vec3{random2, random1, 0}, vec3{0, 1, 0},0.3f,true));
-//        random1  = (float)(rand() % 1000)/(float)1000000+0.0005;
-//        random2  = (float)(rand() % 1000)/(float)1000000+0.0005;
-//        scene.emplace_back(new Particle(vec3{0, -0.4, -10}, vec3{-random1, random2,0}, vec3{0, 1, 0},0.3f,true));
-//        return false;
-//      }
-//      return !jeMimoObrazovky();
+
     bumm -= dt;
     return true;
 }
